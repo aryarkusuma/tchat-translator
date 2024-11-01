@@ -16,12 +16,16 @@ document.addEventListener("DOMContentLoaded", () => {
         chrome.storage.sync.get(['translatorEnabled'], (result) => {
             const currentState = result.translatorEnabled !== undefined ? result.translatorEnabled : true;
             const newState = !currentState;
+
+            // Save the new state to storage
             chrome.storage.sync.set({ translatorEnabled: newState }, () => {
                 toggleButton.textContent = newState ? "Disable Translator" : "Enable Translator";
-                
+
                 // Send a message to the content script to enable/disable translation
                 chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-                    chrome.tabs.sendMessage(tabs[0].id, { action: "toggle", enabled: newState });
+                    if (tabs[0]) {
+                        chrome.tabs.sendMessage(tabs[0].id, { action: "toggle", enabled: newState });
+                    }
                 });
             });
         });
