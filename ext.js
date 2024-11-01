@@ -4,84 +4,103 @@ let observer;
 
 // Function to observe target node
 function observeTargetNode() {
-  observer = new MutationObserver((mutationsList) => {
-    mutationsList.forEach((mutation) => {
-      if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
-        mutation.addedNodes.forEach((newNode) => {
-          const specificElement = newNode.querySelector("div > div > div.Layout-sc-1xcs6mc-0.cwtKyw.chat-line__message-container > div:nth-child(2) > div > div > span:nth-child(3) > span") || newNode.querySelector("div > div > div.Layout-sc-1xcs6mc-0.cwtKyw.chat-line__message-container > div:nth-child(2) > div > div > span:nth-child(3) > span:nth-child(2)") ;
+    observer = new MutationObserver((mutationsList) => {
+        mutationsList.forEach((mutation) => {
+            if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                mutation.addedNodes.forEach((newNode) => {
+                    const selectors = [
+                        "div > div > div.Layout-sc-1xcs6mc-0.cwtKyw.chat-line__message-container > div:nth-child(2) > div > div > span:nth-child(3) > span",
+                        "div > div > div.Layout-sc-1xcs6mc-0.cwtKyw.chat-line__message-container > div:nth-child(2) > div > div > span:nth-child(3) > span:nth-child(2)",
+                        "div > div > div.Layout-sc-1xcs6mc-0.cwtKyw.chat-line__message-container > div:nth-child(2) > div > div > span:nth-child(3) > span.text-fragment"
+                    ];
 
-          if (specificElement) {
-            const originalText = specificElement.textContent;
+                    let specificElement = null;
 
-            // Get source language from storage before translating
-            chrome.storage.sync.get(['sourceLanguage'], (result) => {
-              const sourceLanguage = result.sourceLanguage || 'ar';
+                    for (const selector of selectors) {
+                        specificElement = newNode.querySelector(selector);
 
-              // Translation request
-              fetch("https://tweetpic.taila9d411.ts.net/translate", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                  q: originalText,
-                  source: sourceLanguage,
-                  target: "en"
-                })
-              })
-              .then(response => response.json())
-              .then(data => {
-                if (data && data.translatedText) {
-                  specificElement.textContent = data.translatedText;
-                }
-              })
-              .catch(error => console.error("Translation API error:", error));
-            });
-          }
+                        if (specificElement) {
+                            const originalText = specificElement.textContent;
+
+                            // Get source language from storage before translating
+                            chrome.storage.sync.get(['sourceLanguage'], (result) => {
+                                const sourceLanguage = result.sourceLanguage || 'ar';
+
+                                // Translation request
+                                fetch("https://tweetpic.taila9d411.ts.net/translate", {
+                                        method: "POST",
+                                        headers: {
+                                            "Content-Type": "application/json"
+                                        },
+                                        body: JSON.stringify({
+                                            q: originalText,
+                                            source: sourceLanguage,
+                                            target: "en"
+                                        })
+                                    })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        if (data && data.translatedText) {
+                                            specificElement.textContent = data.translatedText;
+                                        }
+                                    })
+                                    .catch(error => console.error("Translation API error:", error));
+                            });
+                            break;
+                        }
+
+                    }
+                });
+            }
         });
-      }
     });
-  });
 
-  observer.observe(targetNode, { childList: true });
+    observer.observe(targetNode, {
+        childList: true
+    });
 }
 
 // Start observing the target node
 function startObserving() {
-  if (!targetNode) return;
+    if (!targetNode) return;
 
-  console.log("Starting to observe the target node.");
-  observeTargetNode();
+    console.log("Starting to observe the target node.");
+    observeTargetNode();
 }
 
 // Stop observing the target node
 function stopObserving() {
-  if (observer) {
-    observer.disconnect();
-    observer = null;
-    console.log("Stopped observing the target node.");
-  }
+    if (observer) {
+        observer.disconnect();
+        observer = null;
+        console.log("Stopped observing the target node.");
+    }
 }
 
 // Check for the target node every 5 seconds
 function checkForTargetNode() {
-  targetNode = document.querySelector(targetSelector);
-  
-  if (targetNode) {
-    console.log("Target node found!");
-    startObserving();
-    clearInterval(checkInterval);
-  } else {
-    console.log("Target node not found, checking again...");
-  }
+    targetNode = document.querySelector(targetSelector);
+
+    if (targetNode) {
+        console.log("Target node found!");
+        startObserving();
+        clearInterval(checkInterval);
+    } else {
+        console.log("Target node not found, checking again...");
+    }
 }
 
 // Periodic check
-const checkInterval = setInterval(checkForTargetNode, 5000);
+const checkInterval = setInterval(checkForTargetNode, 1000);
+
 
 // Listen for toggle messages from the popup
 chrome.runtime.onMessage.addListener((request) => {
-  if (request.action === "toggle") {
-    request.enabled ? startObserving() : stopObserving();
-  }
+    if (request.action === "toggle") {
+        if (request.enabled) {
+            startObserving();
+        } else {
+            stopObserving();
+        }
+    }
 });
