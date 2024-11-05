@@ -10,8 +10,6 @@ function observeTargetNode() {
                 mutation.addedNodes.forEach((newNode) => {
                     const selectors = [
 			"div > div > div.Layout-sc-1xcs6mc-0.cwtKyw.chat-line__message-container > div:nth-child(2) > div > div > span:nth-child(3) > span.text-fragment",
-                        "div > div > div.Layout-sc-1xcs6mc-0.cwtKyw.chat-line__message-container > div:nth-child(2) > div > div > span:nth-child(3) > span:nth-child(2)",
-			"div > div > div.Layout-sc-1xcs6mc-0.cwtKyw.chat-line__message-container > div:nth-child(2) > div > div > span:nth-child(3) > span"
                     ];
 
                     let specificElement = null;
