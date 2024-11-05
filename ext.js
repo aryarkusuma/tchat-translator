@@ -55,4 +55,4 @@ function checkForTargetNode() {
 }
 
 // Check for the target node every 5 seconds
-const checkInterval = setInterval(checkForTargetNode, 5000);
+const checkInterval = setInterval(checkForTargetNode, 1000);
