@@ -27,7 +27,7 @@ function observeTargetNode() {
                                 const sourceLanguage = result.sourceLanguage || 'ar';
 
                                 // Translation request
-                                fetch("https://tweetpic.taila9d411.ts.net/translate", {
+                                fetch("https://tchat-translator.aryarkusuma.my.id/translate", {
                                         method: "POST",
                                         headers: {
                                             "Content-Type": "application/json"
