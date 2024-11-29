@@ -7,4 +7,4 @@
 ### Install:
 Chrome -> Extention Settings -> Turn on Developer mode -> Load Unpacked -> choose this folder/dir
 ----
-im using self-hosted libretranslate : [tchat-translator.aryarkusuma.my.id](https://tchat-translator.aryarkusuma.my.id)
+For the translator, im using self-hosted LibreTranslate : [tchat-translator.aryarkusuma.my.id](https://tchat-translator.aryarkusuma.my.id)
