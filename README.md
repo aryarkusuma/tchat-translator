@@ -9,3 +9,4 @@
 ----
 - For the translator API, im using self-hosted LibreTranslate : [tchat-translator.aryarkusuma.my.id](https://tchat-translator.aryarkusuma.my.id)
 - if its not working just dm me throught my contact if u want to try it out, or you have your own LibreTranslate hosted, just change the url in the code ext.js line #29.
+- [Doc](https://aryarkusuma.notion.site/Twitch-Youtube-Live-Chat-Translator-Browser-Extention-131bc9c14c2180868125cc4c38bcad92)
